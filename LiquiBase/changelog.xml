@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+		
+	<changeSet id="1" author="TimTester">
+        <createTable tableName="liquibaseTest">
+            <column name="id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="boolean" defaultValueBoolean="true"/>
+        </createTable>
+    </changeSet>
+	
+	 <changeSet author="TonyMontana" id="22">
+	   <preConditions>
+	     <tableExists schemaName="public" tableName="liquibaseTest" />
+       </preConditions>
+         <createTable tableName="person">
+            <column name="VORNAME" type="VARCHAR(100)"/>
+            <column name="NAME" type="VARCHAR(100)"/>
+            <column name="FIRMA" type="VARCHAR2(200)"/>
+            <column name="EMAIL" type="VARCHAR2(150)"/>
+         </createTable>
+    </changeSet>
+
+	 <changeSet author="TonyMontana" id="23" context="!dev">
+		<sql>
+			insert into person (vorname, name, firma, email) values ('Stephan', 'Kaps', 'Kitenco', 'info@kitenco.de')
+		</sql>
+		<rollback>
+			delete from person where name='Kaps';
+		</rollback>
+	</changeSet>
+
+    <changeSet author="TonyMontana" id="24">	  
+		<addColumn tableName="person">
+			<column name="WEB" type="character(200)"/>
+		</addColumn>
+	</changeSet>
+
+	
+	<include file="create_sqltest.sql"/>
+	<include file="insert_sqltest.sql"/>
+	
+	
+</databaseChangeLog>
+
